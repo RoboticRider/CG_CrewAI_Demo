@@ -11,6 +11,7 @@ dependencies = [
     "dotenv>=0.9.9",
     "isort>=8.0.1",
     "litellm>=1.83.0",
+    "mcp>=1.26.0",
     "reportlab>=4.5.0",
 ]
 

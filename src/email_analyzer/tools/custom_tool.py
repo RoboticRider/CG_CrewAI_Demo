@@ -7,7 +7,6 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 
 
-# ✅ Pydantic Schema with Clean Labels (Aliases)
 class InvoicePDFInput(BaseModel):
     company_name: str = Field(..., alias="Company Name")
     invoice_date: str = Field(..., alias="Invoice Date")
@@ -15,7 +14,6 @@ class InvoicePDFInput(BaseModel):
     invoice_no: str = Field(..., alias="Invoice Number")
 
 
-# ✅ Tool Class
 class GenerateInvoicePDFTool(BaseTool):
     name: str = "Generate Invoice PDF"
     description: str = (
@@ -25,48 +23,40 @@ class GenerateInvoicePDFTool(BaseTool):
     args_schema: Type[BaseModel] = InvoicePDFInput
 
     def _run(
-        self, company_name: str, invoice_date: str, invoice_amount: str, invoice_no: str
-    ) -> str:
+        self,
+        company_name: str,
+        invoice_date: str,
+        invoice_amount: str,
+        invoice_no: str
+    ) -> dict:
 
-        # ✅ Hardcoded output path
-        output_dir = r"C:\Users\ppjai\Desktop\Invoice"
+        output_dir = r"C:\Invoice"
         os.makedirs(output_dir, exist_ok=True)
 
-        # ✅ File name based on invoice number
         safe_invoice_no = invoice_no.replace(" ", "_").replace("/", "_")
         file_path = os.path.join(output_dir, f"{safe_invoice_no}.pdf")
 
-        # ✅ Create PDF
         doc = SimpleDocTemplate(file_path)
         styles = getSampleStyleSheet()
 
         content = []
-
-        # Title
         content.append(Paragraph("<b>Invoice Details</b>", styles["Title"]))
         content.append(Spacer(1, 20))
 
-        # Clean formatted fields (no mapping needed)
-        content.append(
-            Paragraph(f"<b>Company Name:</b> {company_name}", styles["Normal"])
-        )
+        content.append(Paragraph(f"<b>Company Name:</b> {company_name}", styles["Normal"]))
         content.append(Spacer(1, 12))
 
-        content.append(
-            Paragraph(f"<b>Invoice Date:</b> {invoice_date}", styles["Normal"])
-        )
+        content.append(Paragraph(f"<b>Invoice Date:</b> {invoice_date}", styles["Normal"]))
         content.append(Spacer(1, 12))
 
-        content.append(
-            Paragraph(f"<b>Invoice Amount:</b> {invoice_amount}", styles["Normal"])
-        )
+        content.append(Paragraph(f"<b>Invoice Amount:</b> {invoice_amount}", styles["Normal"]))
         content.append(Spacer(1, 12))
 
-        content.append(
-            Paragraph(f"<b>Invoice Number:</b> {invoice_no}", styles["Normal"])
-        )
+        content.append(Paragraph(f"<b>Invoice Number:</b> {invoice_no}", styles["Normal"]))
 
-        # Build PDF
         doc.build(content)
 
-        return f"✅ PDF generated at: {file_path}"
+        return {
+            "status": "success",
+            "file_path": file_path
+        }

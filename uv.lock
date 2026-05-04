@@ -736,6 +736,7 @@ dependencies = [
     { name = "dotenv" },
     { name = "isort" },
     { name = "litellm" },
+    { name = "mcp" },
     { name = "reportlab" },
 ]
 
@@ -747,6 +748,7 @@ requires-dist = [
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "isort", specifier = ">=8.0.1" },
     { name = "litellm", specifier = ">=1.83.0" },
+    { name = "mcp", specifier = ">=1.26.0" },
     { name = "reportlab", specifier = ">=4.5.0" },
 ]
 

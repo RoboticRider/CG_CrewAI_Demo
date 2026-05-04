@@ -20,12 +20,7 @@ class EmailAnalyzer:
     agents: list[BaseAgent]
     tasks: list[Task]
 
-    # Learn more about YAML configuration files here:
-    # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-    # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
 
-    # If you would like to add tools to your agents, you can learn more about it here:
-    # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
     def email_analyzer(self) -> Agent:
         return Agent(
@@ -49,9 +44,7 @@ class EmailAnalyzer:
             ],
         )
 
-    # To learn more about structured task outputs,
-    # task dependencies, and task callbacks, check out the documentation:
-    # https://docs.crewai.com/concepts/tasks#overview-of-a-task
+    
     @task
     def email_analyzer_task(self) -> Task:
         return Task(
@@ -67,8 +60,7 @@ class EmailAnalyzer:
     @crew
     def crew(self) -> Crew:
         """Creates the EmailAnalyzer crew"""
-        # To learn how to add knowledge sources to your crew, check out the documentation:
-        # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
+        
 
         return Crew(
             agents=self.agents,  # Automatically created by the @agent decorator
