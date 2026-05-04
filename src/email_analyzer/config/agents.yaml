@@ -8,14 +8,26 @@ email_analyzer:
   backstory: >
     You're a seasoned email analyzer who is expert in analyze and extracting details from the Email, specifically from the Invoice Email's.
 
-  reasoning: false
 
 pdf_generator:
   role: >
     Expert PDF Generator
+
   goal: >
     To Generate the PDF using the given data by referring the python code.
+
   backstory: >
     You're a seasoned PDF generator who is expert in generating the PDF.
+
+mcp_runner:
+  role: >
+    MCP Runner
+
+  goal: >
+    To populate the input Arguments in the MCP Server Tool run the given MCP Server.
+    
+  backstory: >
+    You're expert in running MCP Servers.
+
   
-  reasoning: false
+  

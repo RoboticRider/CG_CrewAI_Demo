@@ -42,3 +42,22 @@ pdf_generator_task:
   context: [email_analyzer_task]
 
   agent: pdf_generator
+
+
+mcp_runner_task:
+  description: >
+
+    1. Take the File Path from the Previous task.
+    
+    2. Populate the MCP Server Tool input Argument with that File Path.
+
+    3. Run the MCP Server.
+  
+  expected_output: >
+    MCP Server ran successfully and the email has been sent.
+  
+  context: [pdf_generator_task]
+
+  agent: mcp_runner
+
+

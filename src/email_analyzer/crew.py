@@ -33,7 +33,15 @@ class EmailAnalyzer:
         return Agent(
             config=self.agents_config["pdf_generator"],  # type: ignore[index]
             verbose=True,
-            tools=[pdf_tool],
+            tools=[pdf_tool]
+            
+        )
+
+    @agent
+    def mcp_runner(self) -> Agent:
+        return Agent(
+            config=self.agents_config["mcp_runner"],  # type: ignore[index]
+            verbose=True,
             mcps=[
                 MCPServerHTTP(
                     url=os.getenv("MCP_URL"),
@@ -44,7 +52,7 @@ class EmailAnalyzer:
             ],
         )
 
-    
+
     @task
     def email_analyzer_task(self) -> Task:
         return Task(
@@ -55,6 +63,12 @@ class EmailAnalyzer:
     def pdf_generator_task(self) -> Task:
         return Task(
             config=self.tasks_config["pdf_generator_task"]  # type: ignore[index]
+        )
+
+    @task
+    def mcp_runner_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["mcp_runner_task"]  # type: ignore[index]
         )
 
     @crew
