@@ -1,0 +1,44 @@
+email_analyzer_task:
+  description: >
+    1. You are given an {email_input} email body.
+    
+    2. From this input you have to analyze the email for invoice related details.
+    
+    3. Extract the Invoice No, Invoice Date, Company Name and Invoice Amount,
+    and provide it according to the format written in expected_output section.
+    
+    4. If you can't find these details in the input keep those details blank.
+
+  expected_output: >
+    Give the output in this format, remember to provide output strictly in this format only line by line:-
+    
+    Invoice No:
+    Invoice Date:
+    Company Name:
+    Invoice Amount:
+    
+  agent: email_analyzer
+
+pdf_generator_task:
+  description: >
+
+    1. Take the structured invoice data from previous task.
+
+    2. Use the available tool "PDF Generator Tool".
+
+    3. Pass invoice_no, invoice_date, company_name, invoice_amount.
+
+    4. Generate the PDF file in the Path.
+
+    5. Return the full file path.
+
+    6. Put the file path returned as an input to the MCP Server.
+
+    7. Execute the MCP Server.
+  
+  expected_output: >
+    The PDF generated in the project Output Folder, e.g -INV_001.pdf.
+  
+  context: [email_analyzer_task]
+
+  agent: pdf_generator
