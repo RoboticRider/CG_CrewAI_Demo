@@ -35,6 +35,7 @@ class GenerateInvoicePDFTool(BaseTool):
 
         safe_invoice_no = invoice_no.replace(" ", "_").replace("/", "_")
         file_path = os.path.join(output_dir, f"{safe_invoice_no}.pdf")
+        file_path = os.path.normpath(file_path)
 
         doc = SimpleDocTemplate(file_path)
         styles = getSampleStyleSheet()
