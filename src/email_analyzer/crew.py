@@ -3,14 +3,14 @@ import os
 from crewai import Agent, Crew, Process, Task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from crewai.mcp import MCPServerHTTP
-from crewai.project import CrewBase, agent, crew, task
+from crewai.project import CrewBase, agent, crew, task, tool
 from dotenv import load_dotenv
 
 from email_analyzer.tools.custom_tool import GenerateInvoicePDFTool
 
-load_dotenv()
+pdf_generate_upload=GenerateInvoicePDFTool()
 
-pdf_tool = GenerateInvoicePDFTool()
+load_dotenv()
 
 
 @CrewBase
@@ -33,8 +33,7 @@ class EmailAnalyzer:
         return Agent(
             config=self.agents_config["pdf_generator"],  # type: ignore[index]
             verbose=True,
-            tools=[pdf_tool]
-            
+            tools=[pdf_generate_upload]
         )
 
     @agent

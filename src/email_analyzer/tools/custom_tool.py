@@ -1,12 +1,17 @@
 import os
+import base64
 from typing import Type
 
 from crewai.tools import BaseTool
 from pydantic import BaseModel, Field
+
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 
 
+# =========================
+# INPUT SCHEMA
+# =========================
 class InvoicePDFInput(BaseModel):
     company_name: str = Field(..., alias="Company Name")
     invoice_date: str = Field(..., alias="Invoice Date")
@@ -14,11 +19,13 @@ class InvoicePDFInput(BaseModel):
     invoice_no: str = Field(..., alias="Invoice Number")
 
 
+# =========================
+# TOOL CLASS
+# =========================
 class GenerateInvoicePDFTool(BaseTool):
     name: str = "Generate Invoice PDF"
     description: str = (
-        "Generates a professional PDF invoice using structured data like "
-        "Company Name, Invoice Date, Invoice Amount, and Invoice Number."
+        "Generates a PDF invoice and returns it as Base64 along with file name."
     )
     args_schema: Type[BaseModel] = InvoicePDFInput
 
@@ -30,12 +37,15 @@ class GenerateInvoicePDFTool(BaseTool):
         invoice_no: str
     ) -> dict:
 
-        output_dir = r"C:\Invoice"
+        # =========================
+        # STEP 1: CREATE PDF (Cloud Safe)
+        # =========================
+        output_dir = "output"
         os.makedirs(output_dir, exist_ok=True)
 
         safe_invoice_no = invoice_no.replace(" ", "_").replace("/", "_")
-        file_path = os.path.join(output_dir, f"{safe_invoice_no}.pdf")
-        file_path = os.path.normpath(file_path)
+        file_name = f"{safe_invoice_no}.pdf"
+        file_path = os.path.join(output_dir, file_name)
 
         doc = SimpleDocTemplate(file_path)
         styles = getSampleStyleSheet()
@@ -57,7 +67,18 @@ class GenerateInvoicePDFTool(BaseTool):
 
         doc.build(content)
 
+        # =========================
+        # STEP 2: CONVERT TO BASE64
+        # =========================
+        with open(file_path, "rb") as f:
+            encoded_pdf = base64.b64encode(f.read()).decode("utf-8")
+
+        # =========================
+        # STEP 3: RETURN STRUCTURED OUTPUT
+        # =========================
         return {
             "status": "success",
-            "file_path": file_path
+            "file_name": file_name,
+            "file_content": encoded_pdf,
+            "message": "PDF generated and encoded successfully"
         }

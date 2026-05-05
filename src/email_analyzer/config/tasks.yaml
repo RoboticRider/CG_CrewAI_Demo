@@ -1,44 +1,52 @@
 email_analyzer_task:
   description: >
-    1. You are given an {email_input} email body.
-    
-    2. From this input you have to analyze the email for invoice related details.
-    
-    3. Extract the Invoice No, Invoice Date, Company Name and Invoice Amount,
-    and provide it according to the format written in expected_output section.
-    
-    4. If you can't find these details in the input keep those details blank.
+    You are given an {email_input} email body.
+
+    Extract the following details:
+    - Company Name
+    - Invoice Date
+    - Invoice Amount
+    - Invoice Number
+
+    If any value is missing, return it as an empty string.
+
+    Return ONLY valid JSON. Do not add any explanation.
 
   expected_output: >
-    Give the output in this format, remember to provide output strictly in this format only line by line:-
-    
-    Invoice No:
-    Invoice Date:
-    Company Name:
-    Invoice Amount:
-    
+    {
+      "Company Name": "",
+      "Invoice Date": "",
+      "Invoice Amount": "",
+      "Invoice Number": ""
+    }
+
   agent: email_analyzer
+
 
 pdf_generator_task:
   description: >
+    Take the JSON output from the previous task.
 
-    1. Take the structured invoice data from previous task.
+    You MUST call the tool "Generate Invoice PDF".
 
-    2. Use the available tool "PDF Generator Tool".
+    Pass EXACTLY these fields:
+    - Company Name
+    - Invoice Date
+    - Invoice Amount
+    - Invoice Number
 
-    3. Pass invoice_no, invoice_date, company_name, invoice_amount.
+    Do not rename fields.
+    Do not explain anything.
+    Only return the tool output.
 
-    4. Generate the PDF file in the Path.
-
-    5. Return the full file path.
-
-    6. Put the file path returned as an input to the MCP Server.
-
-    7. Execute the MCP Server.
-  
   expected_output: >
-    The PDF generated in the project Output Folder, e.g -INV_001.pdf.
-  
+    {
+      "status": "success",
+      "file_name": "INV-001.pdf",
+      "file_content": "base64string",
+      "message": "PDF generated and encoded successfully"
+    }
+
   context: [email_analyzer_task]
 
   agent: pdf_generator
@@ -46,18 +54,22 @@ pdf_generator_task:
 
 mcp_runner_task:
   description: >
+    Take the output from the previous task.
 
-    1. Take the File Path from the Previous task.
-    
-    2. Populate the MCP Server Tool input Argument with that File Path.
+    Extract:
+    - file_name
+    - file_content
 
-    3. Run the MCP Server.
-  
+    Send this data to UiPath MCP.
+
+    Do NOT expect any file path.
+    Do NOT modify the data.
+
+    Just forward the data as-is.
+
   expected_output: >
-    MCP Server ran successfully and the email has been sent.
-  
+    Data successfully sent to UiPath MCP.
+
   context: [pdf_generator_task]
 
   agent: mcp_runner
-
-
